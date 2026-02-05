@@ -7,13 +7,15 @@ This is a simple Python script implementing an interactive knock-knock joke game
 - **Single-script design**: All functionality in `main.py` with no external dependencies
 - **Interactive flow**: Uses `input()` for user prompts and `print()` for responses
 - **Loop-based gameplay**: `while` loop allows multiple joke iterations
-- **Conditional joke selection**: `if/elif` chain for robber/tank/pencil jokes
+- **Dictionary-based joke storage**: Centralized `joke_data` dict replaces sequential if/elif branches for scalability
 
 ## Key Patterns
 - **Input handling**: Always use `input("prompt text")` for user interaction, e.g., `joke = input("Do you want to hear a joke? ")`
-- **Response validation**: Simple string comparison (`== "yes"`, `== "finished"`) without case handling
+- **Dictionary-based data structure**: Jokes stored in `joke_data` dict with keys (robbers/tanks/pencils) and values containing setup/response/punchline fields
+- **Response validation**: Use `in` operator for collection checks (e.g., `if question in joke_data`, `if friend in ["yes", "maybe"]`)
 - **Rating calculation**: Convert 1-10 rating to percentage by multiplying by 10: `final_score = int(rate * 10)`
-- **Exit conditions**: Check for `"finished"` to break loops, `"no"` for immediate exit
+- **Exit conditions**: Check for `"finished"` to trigger rating flow, `"no"` for immediate exit
+- **Function design**: `tell_joke(setup, response, punchline)` uses unpacking from dict and conditional printing; `get_rating()` handles rating and recommendation logic
 
 ## Developer Workflows
 - **Run the game**: Execute `python main.py` from project root
@@ -21,13 +23,15 @@ This is a simple Python script implementing an interactive knock-knock joke game
 - **No tests**: Manual testing through interactive runs
 
 ## Code Requirements (from notes.py)
-- **Input/Output dependency**: All output must respond to user input
-- **List justification**: Use lists when picking items or random selections (not currently implemented)
-- **Function requirements**: Functions must have parameters, use sequencing, selection, and iteration
-- **Path variation**: Code paths should differ based on parameter values
+- **Input/Output dependency**: All output must respond to user input via `input()`
+- **List/Dict data structures**: Uses `joke_data` dict for scalable joke management (justifies dict usage for structured data with multiple properties)
+- **Function requirements**: All functions must have parameters, use sequencing, selection, and iteration; code paths differ based on parameter values
+  - `tell_joke(setup, response, punchline)`: sequencing (loop + multiple inputs), selection (if punchline/response), iteration (for loop even if range(1))
+  - `get_rating()`: selection (if/elif for friend recommendations), sequencing (input → process → output)
 
 ## Common Modifications
-- Add new joke categories by extending the `if/elif` chain in the main loop
-- Implement list-based random joke selection for variety
-- Add input validation (lowercase conversion, yes/no normalization)
-- Create functions for joke telling to meet requirements in notes.py
+- Add new joke categories by adding entries to `joke_data` dict with setup/response/punchline keys
+- Add input validation (e.g., `.lower()` for case-insensitive comparison)
+- Implement random joke selection from `joke_data.items()`
+- Add logging or error handling for invalid rating inputs
+- Extend `get_rating()` to store results to a file or database
